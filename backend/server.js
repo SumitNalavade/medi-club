@@ -62,8 +62,17 @@ const userSchema = mongoose.Schema({
     password: String
 });
 
-const drugSchema = mongoose.Schema({
-    drugName: String
+const InventoryItemTypeSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    schedule: { type: String, required: true },
+    time: { type: String, required: true },
+    quantity: { type: Number, required: true },
+    image: { type: String, required: true, default: 'default-image-url' },
+});
+
+const InventorySchema = new mongoose.Schema({
+    email: { type: String, required: true, unique: true },
+    drugs: [InventoryItemType.schema],
 });
 
 let User = mongoose.model('users', userSchema);
@@ -142,6 +151,44 @@ app.post("/login", jsonParser, (req, res) => {
         })
     });
 })
+
+// Route to add an inventory item
+app.post('/add-inventory-item', async (req, res) => {
+    const { email, name, schedule, time, quantity, image } = req.body;
+
+    try {
+        let inventory = await Inventory.findOne({ email });
+
+        const newItem = new InventoryItemType({
+            name,
+            schedule,
+            time,
+            quantity,
+            image: image || 'default-image-url', // Use provided image or default
+        });
+
+        if (inventory) {
+            // Add to existing inventory
+            inventory.drugs.push(newItem);
+        } else {
+            // Create new inventory
+            inventory = new Inventory({
+                email,
+                drugs: [newItem],
+            });
+        }
+
+        await inventory.save();
+        res.status(200).send('Inventory item added successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
 
 
 app.post("/logout", jsonParser, (req, res) => {
