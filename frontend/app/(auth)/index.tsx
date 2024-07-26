@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Image, TextInput, TouchableOpacity, SafeAreaView, Text, Alert } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 
 export default function SigninScreen() {
   const [email, setEmail] = useState('');
@@ -19,11 +19,12 @@ export default function SigninScreen() {
                   password,
               }),
           });
-
+          
           const data = await response.json();
 
           if (data.success) {
               Alert.alert('Success', 'Login successful!');
+              router.replace("/home")
           } else {
               Alert.alert('Login failed');
           }
