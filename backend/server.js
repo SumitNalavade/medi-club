@@ -2,7 +2,7 @@
 require('dotenv').config();
 
 //GridFS stuff
-const { MongoClient, GridFSBucket } = require('mongodb');
+const { MongoClient} = require('mongodb');
 const fs = require('fs');
 
 //general citations for this page: https://www.youtube.com/watch?v=w3vs4a03y3I and https://www.youtube.com/watch?v=bhiEJW5poHU
@@ -10,22 +10,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-
-//used to generate token
-const { v4: uuidv4 } = require('uuid');
-
-//nodemailer stuff
-const nodemailer = require('nodemailer');
-
-// Setup nodemailer transporter
-const transporter = nodemailer.createTransport({
-    service: 'Gmail', // Use any email service provider you prefer
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
-
 
 //citation start: https://heynode.com/blog/2020-04/salt-and-hash-passwords-bcrypt/
 const bcrypt = require('bcryptjs');
@@ -115,8 +99,6 @@ function newUser(newUsername, newName, newPass, newisCoach) {
     if (!newUsername || !newPass) {
         return false;
     }
-
-    const verificationToken = uuidv4(); // Generate a verification token
 
     const newUser = new User({
         username: newUsername,
