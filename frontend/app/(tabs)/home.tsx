@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { InventoryItem } from '/Users/diegomarques/Desktop/medi-club/frontend/components/InventoryComponents'
+import { InventoryItem } from '../../components/InventoryComponents';
 
 type MedicationType = {
   id: string;
