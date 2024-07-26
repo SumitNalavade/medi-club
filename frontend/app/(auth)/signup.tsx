@@ -1,9 +1,39 @@
-import React from 'react';
-import { StyleSheet, View, Image, TextInput, TouchableOpacity, SafeAreaView, Text } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Image, TextInput, TouchableOpacity, SafeAreaView, Text, Alert } from 'react-native';
 import { useRouter, Link } from 'expo-router';
 
 export default function SignupScreen() {
     const router = useRouter();
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSignup = async () => {
+        try {
+            const response = await fetch('http://localhost:3456/signUp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    password,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                Alert.alert('Success', 'Signup successful!');
+            } else {
+                Alert.alert('Signup failed');
+            }
+        } catch (error) {
+            Alert.alert('Error', 'An error occurred during signup');
+        }
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.content}>
@@ -17,20 +47,26 @@ export default function SignupScreen() {
                     style={styles.input}
                     placeholder="Name"
                     placeholderTextColor="#999"
+                    value={name}
+                    onChangeText={setName}
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
                     placeholderTextColor="#999"
+                    value={email}
+                    onChangeText={setEmail}
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Password"
                     placeholderTextColor="#999"
                     secureTextEntry
+                    value={password}
+                    onChangeText={setPassword}
                 />
 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={handleSignup}>
                     <Text style={styles.buttonText}>Sign Up</Text>
                 </TouchableOpacity>
 

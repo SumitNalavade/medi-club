@@ -69,7 +69,7 @@ const drugSchema = mongoose.Schema({
 let User = mongoose.model('users', userSchema);
 
 //insert new user into mongoDB
-function newUser(newEmail, newName, newPass, newisCoach) {
+function newUser(newEmail, newName, newPass) {
     //don't allow fields
     if (!newEmail|| !newPass || !newName)  {
         return false;

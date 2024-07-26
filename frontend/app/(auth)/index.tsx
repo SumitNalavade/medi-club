@@ -1,8 +1,37 @@
-import React from 'react';
-import { StyleSheet, View, Image, TextInput, TouchableOpacity, SafeAreaView, Text } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Image, TextInput, TouchableOpacity, SafeAreaView, Text, Alert } from 'react-native';
 import { Link } from 'expo-router';
 
 export default function SigninScreen() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignin = async () => {
+
+      try {
+          const response = await fetch('http://localhost:3456/login', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  email,
+                  password,
+              }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+              Alert.alert('Success', 'Login successful!');
+          } else {
+              Alert.alert('Login failed');
+          }
+      } catch (error) {
+          Alert.alert('Error', 'An error occurred during login');
+      }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
@@ -16,15 +45,19 @@ export default function SigninScreen() {
           style={styles.input}
           placeholder="Email"
           placeholderTextColor="#999"
+          value={email}
+          onChangeText={setEmail}
         />
         <TextInput
           style={styles.input}
           placeholder="Password"
           placeholderTextColor="#999"
           secureTextEntry
+          value={password}
+          onChangeText={setPassword}
         />
         
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleSignin}>
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
         
