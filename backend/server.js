@@ -85,6 +85,36 @@ function newUser(newEmail, newName, newPass, newisCoach) {
 
 }
 
+//sign up a new user
+app.post("/signUp", jsonParser, (req, res) => {
+    console.log("create called")
+    //retrieve password from mongoDB
+    User.findOne({ email: req.body.email, name: req.body.name}).exec().then(function (data) {
+        //check that email already exists for specific type of account
+        if (data != null) {
+            res.json({ "success": false, "message": "email already has account" });
+        }
+        else {
+            let password = req.body.password;
+            //hash citation start: https://heynode.com/blog/2020-04/salt-and-hash-passwords-bcrypt/
+            bcrypt.hash(password, saltRounds, function (err, hash) {
+                //hash citation end
+                if (newUser(req.body.email, req.body.name, hash) == true) {
+                    res.json({
+                        "success": true, "message": "You've Created An Account!"
+                    });
+                }
+                else {
+                    res.json({
+                        "success": false, "message": "You couldn't create an Account, Make Sure All Fields are Filled In!"
+                    });
+                }
+            });
+        }
+    });
+
+})
+
 
 app.post("/login", jsonParser, (req, res) => {
 
