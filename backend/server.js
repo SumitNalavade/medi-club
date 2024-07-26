@@ -2,7 +2,7 @@
 require('dotenv').config();
 
 //GridFS stuff
-const { MongoClient} = require('mongodb');
+const { MongoClient } = require('mongodb');
 const fs = require('fs');
 
 //general citations for this page: https://www.youtube.com/watch?v=w3vs4a03y3I and https://www.youtube.com/watch?v=bhiEJW5poHU
@@ -32,7 +32,6 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false })
 async function connect() {
     try {
         await (mongoose.connect(uri));
-        createGridFSBuckets();
         console.log("Connected to MongoDB");
     } catch (error) {
         console.error(error);
@@ -60,13 +59,10 @@ const myDB = mongoose.connection;
 const userSchema = mongoose.Schema({
     username: String,
     name: String,
-    password: String,
-    isCoach: Boolean,
-    verified: { type: Boolean, default: false },
-    verificationToken: String
+    password: String
 });
 
-const postSchema = mongoose.Schema({
+const drugSchema = mongoose.Schema({
     authorUsername: String,
     authorName: String,
     postName: String,
@@ -80,18 +76,7 @@ const postSchema = mongoose.Schema({
     address: String
 });
 
-const messageSchema = mongoose.Schema({
-    sender: String,
-    eventName: String,
-    date: String,
-    content: String,
-    recipient: String
-});
-
-
 let User = mongoose.model('users', userSchema);
-
-
 
 //insert new user into mongoDB
 function newUser(newUsername, newName, newPass, newisCoach) {
@@ -137,7 +122,7 @@ app.post("/login", jsonParser, (req, res) => {
         })
     });
 })
-   
+
 
 app.post("/logout", jsonParser, (req, res) => {
     globUsername = "";
