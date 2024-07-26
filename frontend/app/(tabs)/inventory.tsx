@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
-import { InventoryItem } from '/Users/diegomarques/Desktop/medi-club/frontend/components/InventoryComponents'
+import { InventoryItem } from '../../components/InventoryComponents'
 
 type InventoryItemType = {
   id: string;
@@ -11,10 +11,11 @@ type InventoryItemType = {
   image: string;
 };
 
+
 const dummyInventory: InventoryItemType[] = [
-  { id: '1', name: 'Item 1', schedule: 'MWF', time: '1:00 PM', quantity: 5, image: '/Users/diegomarques/Desktop/medi-club/frontend/assets/images/pill.png' },
-  { id: '2', name: 'Item 2', schedule: 'MWF', time: '1:00 PM', quantity: 3, image: '/Users/diegomarques/Desktop/medi-club/frontend/assets/images/pill.png' },
-  { id: '3', name: 'Item 3', schedule: 'MWF', time: '1:00 PM', quantity: 8, image: '/Users/diegomarques/Desktop/medi-club/frontend/assets/images/pill.png' },
+  { id: '1', name: 'Item 1', schedule: 'MWF', time: '1:00 PM', quantity: 5, image: '../../assets/images/pill.png' },
+  { id: '2', name: 'Item 2', schedule: 'MWF', time: '1:00 PM', quantity: 3, image: '../../assets/images/pill.png' },
+  { id: '3', name: 'Item 3', schedule: 'MWF', time: '1:00 PM', quantity: 8, image: '../../assets/images/pill.png' },
 ];
 
 const InventoryScreen = () => {

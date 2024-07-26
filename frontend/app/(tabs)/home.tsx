@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { ScheduleItem } from '/Users/diegomarques/Desktop/medi-club/frontend/components/ScheduleComponents'
-import { CompletedItem } from '/Users/diegomarques/Desktop/medi-club/frontend/components/CompletedComponents'
+import { InventoryItem } from '../../components/InventoryComponents';
+import { ScheduleItem } from '../../components/ScheduleComponents'
+import { CompletedItem } from '../../components/CompletedComponents'
 
 type MedicationType = {
   id: string;
@@ -30,13 +31,13 @@ const HomeScreen = () => {
       <ScrollView>
         <View style={styles.summaryCard}>
           <Image
-            source={require('/Users/diegomarques/Desktop/medi-club/frontend/assets/images/weight.png')}
+            source={require('../../assets/images/weight.png')}
             style={styles.weightlifterImage}
           />
         </View>
 
         <Text style={styles.sectionTitle}>Daily Review</Text>
-        <CompletedItem item = {{ id: '1', schedule: "1", image: '/Users/diegomarques/Desktop/medi-club/frontend/assets/images/check.png', name: 'Metformin', time: 'Completed', quantity: 2 }}></CompletedItem>
+        <CompletedItem item = {{ id: '1', schedule: "1", image: '../../assets/images/check.png', name: 'Metformin', time: 'Completed', quantity: 2 }}></CompletedItem>
         {medications.map((med) => (
           <ScheduleItem
             key={med.id}
@@ -46,7 +47,7 @@ const HomeScreen = () => {
               schedule: med.time,
               time: med.time,
               quantity: med.quantity,
-              image: '/Users/diegomarques/Desktop/medi-club/frontend/assets/images/pill.png',
+              image: '../../assets/images/pill.png',
             }}
         
           />
