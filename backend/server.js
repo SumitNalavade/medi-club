@@ -44,6 +44,7 @@ app.listen(port, () => {
     console.log(`http://localhost:${port}`);
 });
 app.use(cors());
+app.use(bodyParser.json());
 
 
 //global variable to be used
@@ -74,6 +75,10 @@ const InventorySchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     drugs: [InventoryItemTypeSchema],
 });
+
+let InventoryItemType = mongoose.model('InventoryItemType', InventoryItemTypeSchema);
+
+let Inventory = mongoose.model('Inventory', InventorySchema);
 
 let User = mongoose.model('users', userSchema);
 
@@ -153,8 +158,13 @@ app.post("/login", jsonParser, (req, res) => {
 })
 
 // Route to add an inventory item
-app.post('/add-inventory-item', async (req, res) => {
-    const { name, schedule, time, quantity, image } = req.body;
+app.post("/add-inventory-item", async (req, res) => {
+    console.log(req.body);
+    let name = req.body.name;
+    let schedule = req.body.schedule;
+    let time = req.body.time;
+    let quantity = req.body.quantity;
+    let image = req.body.image;
     let email = globEmail;
     try {
         let inventory = await Inventory.findOne({ email });
@@ -185,11 +195,6 @@ app.post('/add-inventory-item', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
-
 
 app.post("/logout", jsonParser, (req, res) => {
     globUsername = "";

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image, FlatList, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import axios from 'axios';
 import Autocomplete from 'react-native-autocomplete-input';
 import TruncatedText from '../TruncatedText';
 import DaysPicker from '../DaysPicker';
@@ -45,8 +44,9 @@ const App = () => {
 
   const fetchDrugSuggestions = async (query: string) => {
     try {
-      const response = await axios.get(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:${query}*&limit=10`);
-      const results = response.data.results?.map((drug: any) => drug.openfda.brand_name?.[0]) || [];
+      const response = await fetch(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:${query}*&limit=10`);
+      const data = await response.json();
+      const results = data.results?.map((drug: any) => drug.openfda.brand_name?.[0]) || [];
       setSuggestions(results);
     } catch (error) {
       setSuggestions([]);
@@ -56,9 +56,10 @@ const App = () => {
 
   const fetchDrugInfo = async () => {
     try {
-      const response = await axios.get(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:${pillName}&limit=1`);
-      if (response.data.results && response.data.results.length > 0) {
-        const drug = response.data.results[0];
+      const response = await fetch(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:${pillName}&limit=1`);
+      const data = await response.json();
+      if (data.results && data.results.length > 0) {
+        const drug = data.results[0];
         setDrugInfo({
           image: drug.openfda.image_url ? drug.openfda.image_url[0] : 'default-image-url', // Example field, adjust based on actual API response
           description: drug.description ? drug.description[0] : 'No description available',
@@ -88,100 +89,119 @@ const App = () => {
       quantity: parseInt(amount, 10),
       image: drugInfo ? drugInfo.image : 'default-image-url',
     };
-
+    console.log(plan);
     try {
-      const response = await axios.post('http://localhost:3456/add-inventory-item', plan);
-      if (response.status === 200) {
-        console.log('Inventory item added successfully');
+      const response = await fetch('http://localhost:3456/add-inventory-item', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(plan),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Success', 'Inventory item added successfully!');
+      } else {
+        Alert.alert('Error', 'Error adding inventory item');
+        console.error('Error:', data);
       }
     } catch (error) {
-      console.error('Error adding inventory item:', error);
+      Alert.alert('Error', 'An error occurred while adding the inventory item');
+      console.error('Error:', error);
     }
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => { }}>
-        <Text style={styles.backButtonText}>{"<"}</Text>
-      </TouchableOpacity>
-      <Text style={styles.header}>Add Medication</Text>
-      <Text style={styles.label}>Pills name</Text>
-      <Autocomplete
-        data={suggestions}
-        defaultValue={pillName}
-        onChangeText={handlePillNameChange}
-        flatListProps={{
-          keyExtractor: (_, idx) => idx.toString(),
-          renderItem: ({ item }) => (
-            <TouchableOpacity onPress={() => handleSelectSuggestion(item)}>
-              <Text style={styles.suggestionItem}>{item}</Text>
-            </TouchableOpacity>
-          ),
-        }}
-        inputContainerStyle={styles.autocompleteInputContainer}
-        listContainerStyle={styles.autocompleteListContainer}
-      />
-      <Button title="Search" onPress={fetchDrugInfo} />
-      {error ? (
-        <Text style={styles.errorText}>{error}</Text>
-      ) : (
-        drugInfo && (
-          <View style={styles.drugInfoContainer}>
-            {drugInfo.image ? <Image source={{ uri: drugInfo.image }} style={styles.drugImage} /> : null}
-            <TruncatedText text={drugInfo.description} maxLength={100} />
-            <TruncatedText text={drugInfo.warnings} maxLength={100} />
-          </View>
-        )
-      )}
-      <Text style={styles.label}>Amount & How long?</Text>
-      <View style={styles.row}>
-        <TextInput
-          style={styles.smallInput}
-          value={amount}
-          onChangeText={setAmount}
-          keyboardType="numeric"
-        />
-        <Text style={styles.text}>pills</Text>
-        <TextInput
-          style={styles.smallInput}
-          value={duration}
-          onChangeText={setDuration}
-          keyboardType="numeric"
-        />
-        <Text style={styles.text}>days</Text>
-      </View>
-      <Text style={styles.label}>Days to take</Text>
-      <DaysPicker selectedDays={selectedDays} setSelectedDays={setSelectedDays} />
-      <Text style={styles.label}>Food & Pills</Text>
-      <View style={styles.foodPillsContainer}>
-        {['Before', 'With', 'After'].map(option => (
-          <TouchableOpacity
-            key={option}
-            style={foodPillOption === option ? styles.foodPillButtonSelected : styles.foodPillButton}
-            onPress={() => setFoodPillOption(option)}
-          >
-            <Text style={styles.foodPillText}>{option}</Text>
+    <FlatList
+      data={[]}
+      renderItem={null}
+      ListHeaderComponent={
+        <View style={styles.container}>
+          <TouchableOpacity style={styles.backButton} onPress={() => { }}>
+            <Text style={styles.backButtonText}>{"<"}</Text>
           </TouchableOpacity>
-        ))}
-      </View>
-      <Text style={styles.label}>Notification</Text>
-      <TouchableOpacity onPress={() => setShowTimePicker(true)}>
-        <Text style={styles.timeText}>
-          {notificationTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-        </Text>
-      </TouchableOpacity>
-      {showTimePicker && (
-        <DateTimePicker
-          value={notificationTime}
-          mode="time"
-          display="default"
-          onChange={handleTimeChange}
-        />
-      )}
-      <TouchableOpacity style={styles.doneButton} onPress={handleSubmit}>
-        <Text style={styles.doneButtonText}>Done</Text>
-      </TouchableOpacity>
-    </ScrollView>
+          <Text style={styles.header}>Add Plan</Text>
+          <Text style={styles.label}>Pills name</Text>
+          <Autocomplete
+            data={suggestions}
+            defaultValue={pillName}
+            onChangeText={handlePillNameChange}
+            flatListProps={{
+              keyExtractor: (_, idx) => idx.toString(),
+              renderItem: ({ item }) => (
+                <TouchableOpacity onPress={() => handleSelectSuggestion(item)}>
+                  <Text style={styles.suggestionItem}>{item}</Text>
+                </TouchableOpacity>
+              ),
+            }}
+            inputContainerStyle={styles.autocompleteInputContainer}
+            listContainerStyle={styles.autocompleteListContainer}
+          />
+          <Button title="Search" onPress={fetchDrugInfo} />
+          {error ? (
+            <Text style={styles.errorText}>{error}</Text>
+          ) : (
+            drugInfo && (
+              <View style={styles.drugInfoContainer}>
+                {drugInfo.image ? <Image source={{ uri: drugInfo.image }} style={styles.drugImage} /> : null}
+                <TruncatedText text={drugInfo.description} maxLength={100} />
+                <TruncatedText text={drugInfo.warnings} maxLength={100} />
+              </View>
+            )
+          )}
+          <Text style={styles.label}>Amount & How long?</Text>
+          <View style={styles.row}>
+            <TextInput
+              style={styles.smallInput}
+              value={amount}
+              onChangeText={setAmount}
+              keyboardType="numeric"
+            />
+            <Text style={styles.text}>pills</Text>
+            <TextInput
+              style={styles.smallInput}
+              value={duration}
+              onChangeText={setDuration}
+              keyboardType="numeric"
+            />
+            <Text style={styles.text}>days</Text>
+          </View>
+          <Text style={styles.label}>Days to take</Text>
+          <DaysPicker selectedDays={selectedDays} setSelectedDays={setSelectedDays} />
+          <Text style={styles.label}>Food & Pills</Text>
+          <View style={styles.foodPillsContainer}>
+            {['Before', 'With', 'After'].map(option => (
+              <TouchableOpacity
+                key={option}
+                style={foodPillOption === option ? styles.foodPillButtonSelected : styles.foodPillButton}
+                onPress={() => setFoodPillOption(option)}
+              >
+                <Text style={styles.foodPillText}>{option}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text style={styles.label}>Notification</Text>
+          <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+            <Text style={styles.timeText}>
+              {notificationTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </Text>
+          </TouchableOpacity>
+          {showTimePicker && (
+            <DateTimePicker
+              value={notificationTime}
+              mode="time"
+              display="default"
+              onChange={handleTimeChange}
+            />
+          )}
+          <TouchableOpacity style={styles.doneButton} onPress={handleSubmit}>
+            <Text style={styles.doneButtonText}>Done</Text>
+          </TouchableOpacity>
+        </View>
+      }
+    />
   );
 };
 
