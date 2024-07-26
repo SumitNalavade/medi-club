@@ -24,10 +24,9 @@ export default function SignupScreen() {
 
             const data = await response.json();
 
-            console.log(data);
-
             if (data.success) {
                 Alert.alert('Success', 'Signup successful!');
+                router.replace("/home")
             } else {
                 Alert.alert('Signup failed');
             }
