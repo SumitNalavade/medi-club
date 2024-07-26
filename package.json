@@ -1,0 +1,11 @@
+{
+  "name": "medi-club",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "(cd backend && npm start) & (cd frontend && npm run start)"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
