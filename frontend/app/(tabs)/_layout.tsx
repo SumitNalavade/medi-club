@@ -1,4 +1,4 @@
-import { Tabs } from 'expo-router';
+import { Tabs, Stack } from 'expo-router';
 import React from 'react';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
@@ -34,6 +34,17 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="info"
+        options={{
+          title: 'Info',
+          headerStyle: { backgroundColor: 'green' }, // Green background
+          headerTintColor: 'white', // White text
+          headerTitleStyle: {
+            fontWeight: 'bold', // Example: make the title bold
+          },
         }}
       />
     </Tabs>

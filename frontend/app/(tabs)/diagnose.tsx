@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'expo-router';
 import { StyleSheet, Text, FlatList, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
 import { ConditionItem } from '@/components/ConditionComponent';
 import axios from 'axios';
@@ -34,6 +35,8 @@ const symptoms = {
 }
 
 const DiagnoseScreen = () => {
+    const router = useRouter();
+    
     const [currentGroup, setCurrentGroup] = useState('skinConditions');
     const [selectedSymptoms, setSelectedSymptoms] = useState<any[]>([]);
 
@@ -48,7 +51,7 @@ const DiagnoseScreen = () => {
                 symptoms: [...selectedSymptoms],
             });
 
-            Alert.alert('Diagnosis Result', response.data.disease || 'No message from server');
+            router.push({ pathname: '/info', params: { diagnosis: response.data.disease } })
         } catch (error) {
             Alert.alert('Error', 'Something went wrong. Please try again.');
         }
