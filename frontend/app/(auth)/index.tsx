@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Image, TextInput, TouchableOpacity, SafeAreaView, Text } from 'react-native';
 import { Link } from 'expo-router';
 
 export default function SigninScreen() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
@@ -16,16 +19,22 @@ export default function SigninScreen() {
           style={styles.input}
           placeholder="Email"
           placeholderTextColor="#999"
+          value={email}
+          onChangeText={setEmail}
         />
         <TextInput
           style={styles.input}
           placeholder="Password"
           placeholderTextColor="#999"
+          value={password}
+          onChangeText={setPassword}
           secureTextEntry
         />
         
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Sign In</Text>
+          <Link style={{ width: "100%", textAlign: "center", display: "flex", justifyContent: "center", alignItems: "center" }} replace href={"/home"}>
+            <Text style={styles.buttonText}>Sign In</Text>
+          </Link>
         </TouchableOpacity>
         
         <View style={styles.signupContainer}>

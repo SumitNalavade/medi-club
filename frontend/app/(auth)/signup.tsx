@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Image, TextInput, TouchableOpacity, SafeAreaView, Text } from 'react-native';
-import { useRouter, Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 export default function SignupScreen() {
     const router = useRouter();
+
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.content}>
@@ -17,16 +22,22 @@ export default function SignupScreen() {
                     style={styles.input}
                     placeholder="Name"
                     placeholderTextColor="#999"
+                    value={name}
+                    onChangeText={setName}
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
                     placeholderTextColor="#999"
+                    value={email}
+                    onChangeText={setEmail}
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Password"
                     placeholderTextColor="#999"
+                    value={password}
+                    onChangeText={setPassword}
                     secureTextEntry
                 />
 
