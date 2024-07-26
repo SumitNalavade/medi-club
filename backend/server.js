@@ -174,7 +174,7 @@ app.post("/add-inventory-item", async (req, res) => {
             schedule,
             time,
             quantity,
-            image: image || 'default-image-url', // Use provided image or default
+            image: image || 'https://ychef.files.bbci.co.uk/1280x720/p00pc0vt.jpg', // Use provided image or default
         });
 
         if (inventory) {
@@ -189,10 +189,27 @@ app.post("/add-inventory-item", async (req, res) => {
         }
 
         await inventory.save();
-        res.status(200).send('Inventory item added successfully');
+        res.status(200).json({ message: 'Inventory item added successfully' });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+// Route to get all inventory items for the logged-in user
+app.get('/get-inventory-items', async (req, res) => {
+    let email = globEmail;
+    try {
+        let inventory = await Inventory.findOne({ email });
+        if (inventory) {
+            res.status(200).json(inventory.drugs);
+        } else {
+            res.status(404).json({ error: 'No inventory found for this user' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
