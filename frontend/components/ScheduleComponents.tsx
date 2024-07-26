@@ -14,12 +14,12 @@ type InventoryItemProps = {
   item: InventoryItemType;
 };
 
-export const InventoryItem = ({ item }: InventoryItemProps) => (
+export const ScheduleItem = ({ item }: InventoryItemProps) => (
   <View style={styles.itemContainer}>
     <Image source={{ uri: item.image }} style={styles.itemImage} />
     <View style={styles.itemDetails}>
       <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemQuantity}>{item.schedule} • Quantity: {item.quantity} • {item.time}</Text>
+      <Text style={styles.itemQuantity}>{item.schedule} • {item.quantity} {item.quantity === 1 ? 'Pill' : 'Pills'}</Text>
     </View>
   </View>
 );

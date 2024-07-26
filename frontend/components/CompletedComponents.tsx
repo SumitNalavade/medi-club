@@ -14,12 +14,12 @@ type InventoryItemProps = {
   item: InventoryItemType;
 };
 
-export const InventoryItem = ({ item }: InventoryItemProps) => (
+export const CompletedItem = ({ item }: InventoryItemProps) => (
   <View style={styles.itemContainer}>
     <Image source={{ uri: item.image }} style={styles.itemImage} />
     <View style={styles.itemDetails}>
       <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemQuantity}>{item.schedule} • Quantity: {item.quantity} • {item.time}</Text>
+      <Text style={styles.itemQuantity}>Completed</Text>
     </View>
   </View>
 );
@@ -27,7 +27,7 @@ export const InventoryItem = ({ item }: InventoryItemProps) => (
 const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
-    backgroundColor: '#F2F2F2',
+    backgroundColor: '#4E8415',
     borderRadius: 25,
     paddingVertical: 20,
     paddingHorizontal: 15,
@@ -36,8 +36,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemImage: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     borderRadius: 25,
     paddingRight: 15,
   },
@@ -48,10 +48,11 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: 'white',
   },
   itemQuantity: {
     fontSize: 14,
-    color: 'gray',
+    color: 'white',
   },
   editButton: {
     backgroundColor: '#007AFF',
