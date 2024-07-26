@@ -19,7 +19,7 @@ export const ScheduleItem = ({ item }: InventoryItemProps) => (
     <Image source={{ uri: item.image }} style={styles.itemImage} />
     <View style={styles.itemDetails}>
       <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemQuantity}>{item.schedule} * {item.quantity} {item.quantity === 1 ? 'Pill' : 'Pills'}</Text>
+      <Text style={styles.itemQuantity}>{item.schedule} • {item.quantity} {item.quantity === 1 ? 'Pill' : 'Pills'}</Text>
     </View>
   </View>
 );

@@ -19,7 +19,7 @@ export const InventoryItem = ({ item }: InventoryItemProps) => (
     <Image source={{ uri: item.image }} style={styles.itemImage} />
     <View style={styles.itemDetails}>
       <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemQuantity}>{item.schedule} * Quantity: {item.quantity} * {item.time}</Text>
+      <Text style={styles.itemQuantity}>{item.schedule} • Quantity: {item.quantity} • {item.time}</Text>
     </View>
   </View>
 );
