@@ -1,20 +1,23 @@
 import React from 'react';
 import { StyleSheet, View, Text, SafeAreaView, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { InventoryItem } from '/Users/diegomarques/Desktop/medi-club/frontend/components/InventoryComponents'
+import { ScheduleItem } from '/Users/diegomarques/Desktop/medi-club/frontend/components/ScheduleComponents'
+import { CompletedItem } from '/Users/diegomarques/Desktop/medi-club/frontend/components/CompletedComponents'
 
 type MedicationType = {
   id: string;
   name: string;
   time: string;
-  quantity: string;
-  completed: boolean;
+  quantity: number;
 };
 
 const medications: MedicationType[] = [
-  { id: '1', name: 'Metformin', time: 'Completed', quantity: '', completed: true },
-  { id: '2', name: 'Levothyroxine', time: '1:00 PM', quantity: '1 Pill', completed: false },
-  { id: '3', name: 'Omeprazole', time: '1:15 PM', quantity: '1 Pill', completed: false },
-  { id: '4', name: 'Simvastatin', time: '5:00 PM', quantity: '1 Pills', completed: false },
+  { id: '2', name: 'Levothyroxine', time: '1:00 PM', quantity: 1 },
+  { id: '3', name: 'Omeprazole', time: '1:15 PM', quantity: 2 },
+  { id: '4', name: 'Simvastatin', time: '5:00 PM', quantity: 3 },
+  { id: '5', name: 'Simvastatin', time: '5:00 PM', quantity: 1 },
+  { id: '6', name: 'Simvastatin', time: '5:00 PM', quantity: 1 },
+  { id: '7', name: 'Simvastatin', time: '5:00 PM', quantity: 1 },
+
 ];
 
 const HomeScreen = () => {
@@ -25,35 +28,25 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <Text style={styles.greeting}>Hello,</Text>
-        <Text style={styles.name}>Kathryn</Text>
-        
         <View style={styles.summaryCard}>
-          <View style={styles.dateContainer}>
-            <Text style={styles.date}>{formattedDate}</Text>
-            <Text style={styles.progress}>1 of 4 completed</Text>
-          </View>
-          <TouchableOpacity style={styles.manageButton}>
-            <Text style={styles.manageButtonText}>Manage Inventory</Text>
-          </TouchableOpacity>
           <Image
-            source={require('../../assets/images/logo.png')}
+            source={require('/Users/diegomarques/Desktop/medi-club/frontend/assets/images/weight.png')}
             style={styles.weightlifterImage}
           />
         </View>
 
         <Text style={styles.sectionTitle}>Daily Review</Text>
-        
+        <CompletedItem item = {{ id: '1', schedule: "1", image: '/Users/diegomarques/Desktop/medi-club/frontend/assets/images/check.png', name: 'Metformin', time: 'Completed', quantity: 2 }}></CompletedItem>
         {medications.map((med) => (
-          <InventoryItem
+          <ScheduleItem
             key={med.id}
             item={{
               id: med.id,
               name: med.name,
               schedule: med.time,
-              time: med.quantity,
-              quantity: 0,
-              image: '',
+              time: med.time,
+              quantity: med.quantity,
+              image: '/Users/diegomarques/Desktop/medi-club/frontend/assets/images/pill.png',
             }}
         
           />
@@ -81,10 +74,10 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   summaryCard: {
-    backgroundColor: '#FFF9E5',
+    backgroundColor: '#FFFFFF',
     borderRadius: 25,
     padding: 20,
-    marginVertical: 30,
+    marginVertical: 185,
     marginHorizontal: 15,
   },
   dateContainer: {
@@ -109,15 +102,16 @@ const styles = StyleSheet.create({
   },
   weightlifterImage: {
     position: 'absolute',
-    right: 10,
-    bottom: 10,
-    width: 100,
-    height: 100,
+    right: -15,
+    bottom: -170,
+    width: 415,
+    height: 360,
   },
   sectionTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 15,
+    fontSize: 25,
+    marginBottom: 20,
+    marginLeft: 20,
+    marginTop: 5,
   },
 });
 
