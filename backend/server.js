@@ -47,7 +47,7 @@ app.use(cors());
 
 
 //global variable to be used
-let globUsername = "";
+let globEmail = "";
 let globName = "";
 let globId = "";
 
@@ -57,36 +57,26 @@ const myDB = mongoose.connection;
 
 //mongoDB insertion stuff (schemas and functions):
 const userSchema = mongoose.Schema({
-    username: String,
+    email: String,
     name: String,
     password: String
 });
 
 const drugSchema = mongoose.Schema({
-    authorUsername: String,
-    authorName: String,
-    postName: String,
-    postDate: String,
-    postTime: String,
-    postDescription: String,
-    postSlots: Number,
-    latitide: Number,
-    longitude: Number,
-    signedUp: Array,
-    address: String
+    drugName: String
 });
 
 let User = mongoose.model('users', userSchema);
 
 //insert new user into mongoDB
-function newUser(newUsername, newName, newPass, newisCoach) {
-    //don't allow blank usernames/passwords
-    if (!newUsername || !newPass) {
+function newUser(newEmail, newName, newPass, newisCoach) {
+    //don't allow fields
+    if (!newEmail|| !newPass || !newName)  {
         return false;
     }
 
     const newUser = new User({
-        username: newUsername,
+        email: newEmail,
         name: newName,
         password: newPass,
     });
@@ -99,10 +89,10 @@ function newUser(newUsername, newName, newPass, newisCoach) {
 app.post("/login", jsonParser, (req, res) => {
 
     //retrieve password from mongoDB
-    User.findOne({ username: req.body.username }).exec().then(function (data) {
-        //add a null check in case username does not exists
+    User.findOne({ email: req.body.email }).exec().then(function (data) {
+        //add a null check in case email does not exists
         if (data == null) {
-            res.json({ "success": false, "message": "username does not exist" });
+            res.json({ "success": false, "message": "email does not exist" });
             //NEED THIS RETURN STATEMENT VERY IMPORTANT
             return
         }
@@ -111,7 +101,7 @@ app.post("/login", jsonParser, (req, res) => {
         bcrypt.compare(req.body.password, data.password, function (err, result) {
             //citation for comparing to hash end
             if (result) {
-                globUsername = req.body.username;
+                globEmail = req.body.email;
                 globName = data.name;
                 globId = data._id;
                 res.json({ "success": true, "message": "You were able to login!" });
