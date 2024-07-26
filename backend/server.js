@@ -67,12 +67,12 @@ const InventoryItemTypeSchema = new mongoose.Schema({
     schedule: { type: String, required: true },
     time: { type: String, required: true },
     quantity: { type: Number, required: true },
-    image: { type: String, required: true, default: 'default-image-url' },
+    image: { type: String, required: true, default: 'https://ychef.files.bbci.co.uk/1280x720/p00pc0vt.jpg' },
 });
 
 const InventorySchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
-    drugs: [InventoryItemType.schema],
+    drugs: [InventoryItemTypeSchema],
 });
 
 let User = mongoose.model('users', userSchema);
@@ -80,7 +80,7 @@ let User = mongoose.model('users', userSchema);
 //insert new user into mongoDB
 function newUser(newEmail, newName, newPass) {
     //don't allow fields
-    if (!newEmail|| !newPass || !newName)  {
+    if (!newEmail || !newPass || !newName) {
         return false;
     }
 
@@ -98,7 +98,7 @@ function newUser(newEmail, newName, newPass) {
 app.post("/signUp", jsonParser, (req, res) => {
     console.log("create called")
     //retrieve password from mongoDB
-    User.findOne({ email: req.body.email, name: req.body.name}).exec().then(function (data) {
+    User.findOne({ email: req.body.email, name: req.body.name }).exec().then(function (data) {
         //check that email already exists for specific type of account
         if (data != null) {
             res.json({ "success": false, "message": "email already has account" });
@@ -154,8 +154,8 @@ app.post("/login", jsonParser, (req, res) => {
 
 // Route to add an inventory item
 app.post('/add-inventory-item', async (req, res) => {
-    const { email, name, schedule, time, quantity, image } = req.body;
-
+    const { name, schedule, time, quantity, image } = req.body;
+    let email = globEmail;
     try {
         let inventory = await Inventory.findOne({ email });
 

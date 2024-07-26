@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image, FlatList, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
 import Autocomplete from 'react-native-autocomplete-input';
@@ -60,7 +60,7 @@ const App = () => {
       if (response.data.results && response.data.results.length > 0) {
         const drug = response.data.results[0];
         setDrugInfo({
-          image: drug.openfda.image_url ? drug.openfda.image_url[0] : '', // Example field, adjust based on actual API response
+          image: drug.openfda.image_url ? drug.openfda.image_url[0] : 'default-image-url', // Example field, adjust based on actual API response
           description: drug.description ? drug.description[0] : 'No description available',
           warnings: drug.warnings ? drug.warnings[0] : 'No warnings available',
         });
@@ -79,39 +79,32 @@ const App = () => {
     fetchDrugInfo();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const schedule = selectedDays.map(day => day.substring(0, 2)).join('');
     const plan = {
-      pillName,
-      amount,
-      duration,
-      notificationTime,
-      foodPillOption,
-      selectedDays,
+      name: pillName,
+      schedule,
+      time: notificationTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      quantity: parseInt(amount, 10),
+      image: drugInfo ? drugInfo.image : 'default-image-url',
     };
 
-    // Make API call to save plan
-    fetch('http://localhost:3000/plans', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(plan),
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Plan saved:', data);
-      })
-      .catch(error => {
-        console.error('Error saving plan:', error);
-      });
+    try {
+      const response = await axios.post('http://localhost:3456/add-inventory-item', plan);
+      if (response.status === 200) {
+        console.log('Inventory item added successfully');
+      }
+    } catch (error) {
+      console.error('Error adding inventory item:', error);
+    }
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => { }}>
         <Text style={styles.backButtonText}>{"<"}</Text>
       </TouchableOpacity>
-      <Text style={styles.header}>Add Plan</Text>
+      <Text style={styles.header}>Add Medication</Text>
       <Text style={styles.label}>Pills name</Text>
       <Autocomplete
         data={suggestions}
@@ -188,7 +181,7 @@ const App = () => {
       <TouchableOpacity style={styles.doneButton} onPress={handleSubmit}>
         <Text style={styles.doneButtonText}>Done</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -224,7 +217,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 10,
     backgroundColor: '#FFF',
-    flex: 1,
   },
   row: {
     flexDirection: 'row',
