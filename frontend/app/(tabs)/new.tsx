@@ -64,7 +64,7 @@ const App = () => {
       const data = await response.json();
       if (data.results && data.results.length > 0) {
         const drug = data.results[0];
-        setDrugImage(drug.openfda.image_url ? drug.openfda.image_url[0] : 'default-image-url');
+        setDrugImage(drug.openfda.image_url ? drug.openfda.image_url[0] : 'https://ychef.files.bbci.co.uk/1280x720/p00pc0vt.jpg');
         setDescription(drug.description ? drug.description[0] : 'No description available');
         setWarnings(drug.warnings ? drug.warnings[0] : 'No warnings available');
         setError('');
