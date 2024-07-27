@@ -15,7 +15,7 @@ const Info = () => {
             try {
                 setLoading(true);
                 const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-                    model: 'gpt-4', // Use a valid model name
+                    model: 'gpt-4',
                     messages: [
                         {
                             role: 'user',
@@ -24,7 +24,7 @@ const Info = () => {
                     ]
                 }, {
                     headers: {
-                        'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`, // Replace with your actual API key
+                        'Authorization': `Bearer `, // Replace with your actual API key
                         'Content-Type': 'application/json'
                     }
                 });

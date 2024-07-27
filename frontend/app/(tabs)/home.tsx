@@ -37,7 +37,7 @@ const HomeScreen = () => {
         </View>
 
         <Text style={styles.sectionTitle}>Daily Review</Text>
-        <CompletedItem item = {{ id: '1', schedule: "1", image: '../../assets/images/check.png', name: 'Metformin', time: 'Completed', quantity: 2 }}></CompletedItem>
+        <CompletedItem item = {{ id: '1', schedule: "1", image: '/Users/sumitnalavade/Desktop/medi-club/frontend/assets/images/check.png', name: 'Metformin', time: 'Completed', quantity: 2 }}></CompletedItem>
         {medications.map((med) => (
           <ScheduleItem
             key={med.id}
@@ -47,7 +47,7 @@ const HomeScreen = () => {
               schedule: med.time,
               time: med.time,
               quantity: med.quantity,
-              image: '../../assets/images/pill.png',
+              image: '/Users/sumitnalavade/Desktop/medi-club/frontend/assets/images/pill.png',
             }}
         
           />

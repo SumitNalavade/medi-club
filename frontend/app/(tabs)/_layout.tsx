@@ -40,11 +40,7 @@ export default function TabLayout() {
         name="info"
         options={{
           title: 'Info',
-          headerStyle: { backgroundColor: 'green' }, // Green background
-          headerTintColor: 'white', // White text
-          headerTitleStyle: {
-            fontWeight: 'bold', // Example: make the title bold
-          },
+          tabBarButton: () => null,
         }}
       />
     </Tabs>

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, SafeAreaView, Image } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { Link, router } from 'expo-router';
+import { router } from 'expo-router';
+import { InventoryItem } from '../../components/InventoryComponents'; // Import the InventoryItem component
 
 type InventoryItemType = {
   id: string;
@@ -33,7 +34,6 @@ const InventoryScreen = () => {
           'Content-Type': 'application/json',
         },
       });
-
       if (response.ok) {
         const data = await response.json();
         setInventory(data);
@@ -53,18 +53,6 @@ const InventoryScreen = () => {
     router.replace("/new") // Navigate to the "New" screen
   };
 
-  const renderInventoryItem = ({ item }: { item: InventoryItemType }) => (
-    <View style={styles.itemContainer}>
-      <Image source={{ uri: item.image }} style={styles.itemImage} />
-      <View style={styles.itemDetails}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemSchedule}>{item.schedule}</Text>
-        <Text style={styles.itemTime}>{item.time}</Text>
-        <Text style={styles.itemQuantity}>Quantity: {item.quantity}</Text>
-      </View>
-    </View>
-  );
-
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Inventory</Text>
@@ -76,7 +64,7 @@ const InventoryScreen = () => {
         <FlatList
           data={inventory}
           style={{ marginTop: 20 }}
-          renderItem={renderInventoryItem}
+          renderItem={({ item }) => <InventoryItem item={item} />}
           keyExtractor={(item) => item.id}
         />
       )}
@@ -91,7 +79,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
     padding: 20,
-    flex: 1,
   },
   header: {
     fontSize: 32,
@@ -113,43 +100,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
-  },
-  itemContainer: {
-    flexDirection: 'row',
-    marginBottom: 20,
-    padding: 15,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  itemImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginRight: 15,
-  },
-  itemDetails: {
-    flex: 1,
-  },
-  itemName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  itemSchedule: {
-    fontSize: 16,
-    color: '#666',
-  },
-  itemTime: {
-    fontSize: 16,
-    color: '#666',
-  },
-  itemQuantity: {
-    fontSize: 16,
-    color: '#333',
   },
   errorText: {
     fontSize: 16,
